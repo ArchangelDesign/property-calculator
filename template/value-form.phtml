@@ -1,0 +1,54 @@
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<form method="post">
+    <input type="text" style="display:none" name="_adpc_value_form" value="1">
+    <label for="city">City:</label>
+    <input id="city" type="text" pattern="[a-zA-Z\s]*" name="city">
+    <label for="zip">Zip code:</label>
+    <input type="text" name="zip" pattern="\d{5}" id="zip">
+    <label for="state">State:</label>
+    <select name="state" id="state">
+        <option value="ga">Georgia</option>
+        <option value="ny">New York</option>
+    </select>
+    <h4>Units</h4>
+
+    <button id="add-unit">Add</button>
+    <div class="apartment-outer">
+        <div class="apartment-wrapper">
+            <label for="beds">Bedrooms</label>
+            <input type="number" id="beds" name="beds[]" required>
+            <label for="baths">Bathrooms</label>
+            <input type="number" id="baths" name="baths[]" required>
+            <label for="units">Number of units</label>
+            <input type="number" name="units[]" id="units" required>
+        </div>
+    </div>
+    <input type="submit" value="Calculate" style="margin-top: 20px; float: right">
+</form>
+
+<style>
+    .apartment-wrapper {
+        padding: 10px;
+        border: 1px solid grey;
+    }
+</style>
+
+<script>
+    let element = '<div class="apartment-wrapper">\n' +
+        '            <label for="beds">Bedrooms</label>\n' +
+        '            <input type="number" id="beds" name="beds[]" required>\n' +
+        '            <label for="baths">Bathrooms</label>\n' +
+        '            <input type="number" id="baths" name="baths[]" required>\n' +
+        '            <label for="units">Number of units</label>\n' +
+        '            <input type="number" name="units[]" id="units" required>\n' +
+        '            <button onclick="removeUnit(this)">Remove</button>\n' +
+        '        </div>';
+    $('#add-unit').click(function (e) {
+        e.preventDefault();
+        $('.apartment-outer').append(element);
+    });
+
+    function removeUnit(el) {
+        $(el).parent().remove();
+    }
+</script>
