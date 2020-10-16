@@ -120,11 +120,11 @@ class AdpcCalculator
         if ($income instanceof WP_Error) {
             return $income;
         }
-        if ($income >= 100000) {
+        if ($income >= get_option(Adpc::OPTION_CLASS_A_MIN, Adpc::OPTION_DEFAULT_CLASS_A_MIN)) {
             return self::CLASS_A;
-        } elseif ($income >= 60000) {
+        } elseif ($income >= get_option(Adpc::OPTION_CLASS_B_MIN, Adpc::OPTION_DEFAULT_CLASS_B_MIN)) {
             return self::CLASS_B;
-        } elseif ($income >= 40000) {
+        } elseif ($income >= get_option(Adpc::OPTION_CLASS_C_MIN, Adpc::OPTION_DEFAULT_CLASS_C_MIN)) {
             return self::CLASS_C;
         } else {
             return self::CLASS_D;
@@ -133,28 +133,34 @@ class AdpcCalculator
 
     private function adjustCapRate($class, $age)
     {
+        $classBmaxAge = get_option(Adpc::OPTION_CLASS_B_MAX_AGE, Adpc::OPTION_DEFAULT_CLASS_B_MAX_AGE);
+        $classBminAge = get_option(Adpc::OPTION_CLASS_B_MIN_AGE, Adpc::OPTION_DEFAULT_CLASS_B_MIN_AGE);
+        $classCmaxAge = get_option(Adpc::OPTION_CLASS_C_MAX_AGE, Adpc::OPTION_DEFAULT_CLASS_C_MAX_AGE);
+        $classCminAge = get_option(Adpc::OPTION_CLASS_C_MIN_AGE, Adpc::OPTION_DEFAULT_CLASS_C_MIN_AGE);
+        $classDminAge = get_option(Adpc::OPTION_CLASS_D_MIN_AGE, Adpc::OPTION_DEFAULT_CLASS_D_MIN_AGE);
+
         switch ($class) {
             case self::CLASS_A:
-                if ($age <= 20) {
-                    return 0.04;
+                if ($age <= get_option(Adpc::OPTION_CLASS_A_MAX_AGE, Adpc::OPTION_DEFAULT_CLASS_A_MAX_AGE)) {
+                    return get_option(Adpc::OPTION_CLASS_A_CAP_RATE, Adpc::OPTION_DEFAULT_CLASS_A_CAP_RATE);
                 } else {
                     return 0.045;
                 }
             case self::CLASS_B:
-                if ($age >= 15 && $age < 45) {
-                    return 0.0475;
+                if ($age >= $classBminAge && $age <= $classBmaxAge) {
+                    return get_option(Adpc::OPTION_CLASS_B_CAP_RATE, Adpc::OPTION_DEFAULT_CLASS_B_CAP_RATE);
                 } else {
                     return 0.05;
                 }
             case self::CLASS_C:
-                if ($age >= 43 && $age < 60) {
-                    return 0.07;
+                if ($age >= $classCminAge && $age <= $classCmaxAge) {
+                    return get_option(Adpc::OPTION_CLASS_C_CAP_RATE, Adpc::OPTION_DEFAULT_CLASS_C_CAP_RATE);
                 } else {
                     return 0.08;
                 }
             case self::CLASS_D:
-                if ($age >= 60) {
-                    return 0.095;
+                if ($age >= $classDminAge) {
+                    return get_option(Adpc::OPTION_CLASS_D_CAP_RATE, Adpc::OPTION_DEFAULT_CLASS_D_CAP_RATE);
                 } else {
                     return 0.10;
                 }

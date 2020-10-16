@@ -47,8 +47,68 @@ class AdpcRenderer
         return $this->calculator->calculateValue($zip, $numberOfUnits, $averageRent, $expenseRatio, $age);
     }
 
-    public function fieldClassAcap()
+    public function optionClassAmin()
     {
-        echo '<input type="number" name="class_a_min" id="class_a_min" value="' . get_option('class_a_min') . '">';
+        echo '<input type="number" name="' . Adpc::OPTION_CLASS_A_MIN . '" id="' . Adpc::OPTION_CLASS_A_MIN . '" value="' . get_option(Adpc::OPTION_CLASS_A_MIN, Adpc::OPTION_DEFAULT_CLASS_A_MIN) . '">';
+    }
+
+    public function optionClassBmin()
+    {
+        echo '<input type="number" name="' . Adpc::OPTION_CLASS_B_MIN . '" id="' . Adpc::OPTION_CLASS_B_MIN . '" value="' . get_option(Adpc::OPTION_CLASS_B_MIN, Adpc::OPTION_DEFAULT_CLASS_B_MIN) . '">';
+    }
+
+    public function optionClassCmin()
+    {
+        echo '<input type="number" name="' . Adpc::OPTION_CLASS_C_MIN . '" id="' . Adpc::OPTION_CLASS_C_MIN . '" value="' . get_option(Adpc::OPTION_CLASS_C_MIN, Adpc::OPTION_DEFAULT_CLASS_C_MIN) . '">';
+    }
+
+    public function optionClassAcapRate()
+    {
+        echo '<input type="number" name="' . Adpc::OPTION_CLASS_A_CAP_RATE . '" id="' . Adpc::OPTION_CLASS_A_CAP_RATE . '" value="' . get_option(Adpc::OPTION_CLASS_A_CAP_RATE, Adpc::OPTION_DEFAULT_CLASS_A_CAP_RATE) . '">';
+    }
+
+    public function optionClassBcapRate()
+    {
+        echo '<input type="number" name="' . Adpc::OPTION_CLASS_B_CAP_RATE . '" id="' . Adpc::OPTION_CLASS_B_CAP_RATE . '" value="' . get_option(Adpc::OPTION_CLASS_B_CAP_RATE, Adpc::OPTION_DEFAULT_CLASS_B_CAP_RATE) . '">';
+    }
+
+    public function optionClassCcapRate()
+    {
+        echo '<input type="number" name="' . Adpc::OPTION_CLASS_C_CAP_RATE . '" id="' . Adpc::OPTION_CLASS_C_CAP_RATE . '" value="' . get_option(Adpc::OPTION_CLASS_C_CAP_RATE, Adpc::OPTION_DEFAULT_CLASS_C_CAP_RATE) . '">';
+    }
+
+    public function optionClassDcapRate()
+    {
+        echo '<input type="number" name="' . Adpc::OPTION_CLASS_D_CAP_RATE . '" id="' . Adpc::OPTION_CLASS_D_CAP_RATE . '" value="' . get_option(Adpc::OPTION_CLASS_D_CAP_RATE, Adpc::OPTION_DEFAULT_CLASS_D_CAP_RATE) . '">';
+    }
+
+    public function optionClassAmaxAge()
+    {
+        echo '<input type="number" name="' . Adpc::OPTION_CLASS_A_MAX_AGE . '" id="' . Adpc::OPTION_CLASS_A_MAX_AGE . '" value="' . get_option(Adpc::OPTION_CLASS_A_MAX_AGE, Adpc::OPTION_DEFAULT_CLASS_A_MAX_AGE) . '">';
+    }
+
+    public function optionClassBmaxAge()
+    {
+        echo '<input type="number" name="' . Adpc::OPTION_CLASS_B_MAX_AGE . '" id="' . Adpc::OPTION_CLASS_B_MAX_AGE . '" value="' . get_option(Adpc::OPTION_CLASS_B_MAX_AGE, Adpc::OPTION_DEFAULT_CLASS_B_MAX_AGE) . '">';
+    }
+
+    public function optionClassBminAge()
+    {
+        echo '<input type="number" name="' . Adpc::OPTION_CLASS_B_MIN_AGE . '" id="' . Adpc::OPTION_CLASS_B_MIN_AGE . '" value="' . get_option(Adpc::OPTION_CLASS_B_MIN_AGE, Adpc::OPTION_DEFAULT_CLASS_B_MIN_AGE) . '">';
+    }
+
+    public function optionClassCmaxAge()
+    {
+        echo '<input type="number" name="' . Adpc::OPTION_CLASS_C_MAX_AGE . '" id="' . Adpc::OPTION_CLASS_C_MAX_AGE . '" value="' . get_option(Adpc::OPTION_CLASS_C_MAX_AGE, Adpc::OPTION_DEFAULT_CLASS_C_MAX_AGE) . '">';
+    }
+
+    public function optionClassCminAge()
+    {
+        echo '<input type="number" name="' . Adpc::OPTION_CLASS_C_MIN_AGE . '" id="' . Adpc::OPTION_CLASS_C_MIN_AGE . '" value="' . get_option(Adpc::OPTION_CLASS_C_MIN_AGE, Adpc::OPTION_DEFAULT_CLASS_C_MIN_AGE) . '">';
+    }
+
+    public function optionClassDminAge()
+    {
+        echo '<input type="number" name="' . Adpc::OPTION_CLASS_D_MIN_AGE . '" id="' . Adpc::OPTION_CLASS_D_MIN_AGE . '" value="' . get_option(Adpc::OPTION_CLASS_D_MIN_AGE, Adpc::OPTION_DEFAULT_CLASS_D_MIN_AGE) . '">';
     }
 }
