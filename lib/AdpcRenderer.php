@@ -16,40 +16,29 @@ class AdpcRenderer
 
     public function displayForm()
     {
+        $errorText = '';
         if (isset($_POST[self::AD_CALC_FORM_ID])) {
-            $html = '<ul>';
-            $sums = $this->processForm();
-            foreach ($sums as $s) {
-                $html .= '<li>' . $s['type'] . ': average rent = <b>$' . $s['average'] . '</b> total value = <b>$' . $s['total'] . '</b></li>';
+            $zip = sanitize_text_field($_POST['zip']);
+            $numberOfUnits = sanitize_text_field($_POST['number-of-units']);
+            $averageRent = sanitize_text_field($_POST['average-rent']);
+            $expenseRatio = sanitize_text_field($_POST['expense-ratio']);
+            $age = sanitize_text_field($_POST['age-of-property']);
+            $response = $this->processForm($zip, $numberOfUnits, $averageRent, $expenseRatio, $age);
+            if ($response instanceof WP_Error) {
+                $errorText = $response->get_error_message();
+            } else {
+                return '<h5 style="text-align: center">Estimated Property Value</h5> <h3 style="text-align: center">$' . $response . '</h3>';
             }
-            $html .= '</ul>';
-            return $html;
         }
-        return file_get_contents(ADPC_PLUGIN_DIR . '/template/value-form.phtml');
+        return include (ADPC_PLUGIN_DIR . '/template/simple-form.phtml');
     }
 
-    private function processForm()
+    private function processForm($zip, $numberOfUnits, $averageRent, $expenseRatio, $age)
     {
-        $city = sanitize_text_field($_POST['city']);
-        $zip = sanitize_text_field($_POST['zip']);
-        $state = sanitize_text_field($_POST['state']);
-
-        $bedsArray = $_POST['beds'];
-        $bathsArray = $_POST['baths'];
-        $unitsArray = $_POST['units'];
-
-        $result = [];
-
-        foreach ($bedsArray as $key => $bed) {
-            $average = $this->calculator->getAverageRent($zip, $city, $state, $bedsArray[$key], $bathsArray[$key]);
-            $totalValue = $average * $unitsArray[$key];
-            $result[] = [
-                'type' => $bedsArray[$key] . ' beds, ' . $bathsArray[$key] . ' baths',
-                'average' => $average,
-                'total' => $totalValue,
-            ];
+        if ($numberOfUnits < 1) {
+            return new WP_Error('invalid-number-of-units', 'Number of units is invalid');
         }
 
-        return $result;
+        return $this->calculator->calculateValue($zip, $numberOfUnits, $averageRent, $expenseRatio, $age);
     }
 }

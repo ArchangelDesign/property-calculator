@@ -1,0 +1,20 @@
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<form method="post">
+    <?php if (!empty($errorText)) { ?>
+        <div class="php-error">ERROR: <?= $errorText?></div>
+    <?php } ?>
+    <input type="text" style="display:none" name="_adpc_value_form" value="1">
+    <label for="zip">Zip code:</label>
+    <input type="text" name="zip" pattern="\d{5}" id="zip" value="<?= isset($zip) ? $zip : '' ?>" required>
+    <label for="number-of-units">Number of Units:</label>
+    <input type="number" name="number-of-units" id="number-of-units" min="1" required>
+    <label for="average-rent">Average Rent:</label>
+    <input type="number" name="average-rent" id="average-rent" min="100" required>
+    <label for="expense-ratio">Expense Ratio:</label>
+    <input type="number" name="expense-ratio" id="expense-ratio" min="20" required>
+    <label for="age-of-property">Age of Property:</label>
+    <input type="number" name="age-of-property" id="age-of-property" required>
+
+    <input type="submit" value="Calculate" style="margin-top: 20px; float: right">
+</form>
+

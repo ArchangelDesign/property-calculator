@@ -3,6 +3,11 @@
 
 class AdpcCalculator
 {
+    const CLASS_A = 'A';
+    const CLASS_B = 'B';
+    const CLASS_C = 'C';
+    const CLASS_D = 'D';
+
     /** @var DOMDocument */
     private $document;
 
@@ -85,5 +90,106 @@ class AdpcCalculator
         }
 
         return $nodes;
+    }
+
+    public function getMedianHouseholdIncome($zipCode)
+    {
+        $path = ADPC_PLUGIN_DIR . '/data/income-by-zip.csv';
+        if (!file_exists($path)) {
+            return new WP_Error('no-income-by-zip', 'Income by zip data cannot be loaded. File is missing.');
+        }
+        $f = fopen($path, 'r');
+        $found = false;
+        while (!$found) {
+            $line = fgets($f);
+            if ($line === false) {
+                return new WP_Error('zip-not-found', 'Cannot locate zip code ' . $zipCode);
+            }
+            $columns = explode(';', $line);
+            if ($zipCode == $columns[0]) {
+                return (int)trim(str_replace(['$', ',', '"'], '', $columns[5]));
+            }
+        }
+
+        return new WP_Error('panic', 'Unreachable code reached.');
+    }
+
+    private function getCapRateClass($zipCode)
+    {
+        $income = $this->getMedianHouseholdIncome($zipCode);
+        if ($income instanceof WP_Error) {
+            return $income;
+        }
+        if ($income >= 100000) {
+            return self::CLASS_A;
+        } elseif ($income >= 60000) {
+            return self::CLASS_B;
+        } elseif ($income >= 40000) {
+            return self::CLASS_C;
+        } else {
+            return self::CLASS_D;
+        }
+    }
+
+    private function adjustCapRate($class, $age)
+    {
+        switch ($class) {
+            case self::CLASS_A:
+                if ($age <= 20) {
+                    return 0.04;
+                } else {
+                    return 0.045;
+                }
+            case self::CLASS_B:
+                if ($age >= 15 && $age < 45) {
+                    return 0.0475;
+                } else {
+                    return 0.05;
+                }
+            case self::CLASS_C:
+                if ($age >= 43 && $age < 60) {
+                    return 0.07;
+                } else {
+                    return 0.08;
+                }
+            case self::CLASS_D:
+                if ($age >= 60) {
+                    return 0.095;
+                } else {
+                    return 0.10;
+                }
+        }
+    }
+
+    private function getCapRate($zipCode, $age)
+    {
+        $class = $this->getCapRateClass($zipCode);
+        if ($class instanceof WP_Error) {
+            return $class;
+        }
+        return $this->adjustCapRate($class, $age);
+    }
+
+    private function getPercentage($value, $percentage)
+    {
+        return ($value * $percentage) / 100;
+    }
+
+    public function calculateValue($zipCode, $numberOfUnits, $averageRent, $expenseRatio, $ageOfProperty)
+    {
+        // 100k => A Class 4%  MAX 20 years
+        // 60 - 99k => B Class 4.75%  MAX 45 years  MIN 15 years
+        // 40 - 60k => C class 7%  MAX 60 year MIN 43 years
+        // < 40k => D class 9.5%   MIN 60 years
+
+        $capRate = $this->getCapRate($zipCode, $ageOfProperty);
+        if ($capRate instanceof WP_Error) {
+            return $capRate;
+        }
+        $grossIncome = $numberOfUnits * $averageRent;
+        $noi = $grossIncome - $this->getPercentage($grossIncome, $expenseRatio);
+        $valueOfProperty = $noi / $capRate;
+
+        return $valueOfProperty . ' (' . $capRate . ')';
     }
 }
