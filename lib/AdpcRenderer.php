@@ -33,6 +33,11 @@ class AdpcRenderer
         return include (ADPC_PLUGIN_DIR . '/template/simple-form.phtml');
     }
 
+    public function displaySettingsPage()
+    {
+        include ADPC_PLUGIN_DIR . '/template/settings.phtml';
+    }
+
     private function processForm($zip, $numberOfUnits, $averageRent, $expenseRatio, $age)
     {
         if ($numberOfUnits < 1) {
@@ -40,5 +45,10 @@ class AdpcRenderer
         }
 
         return $this->calculator->calculateValue($zip, $numberOfUnits, $averageRent, $expenseRatio, $age);
+    }
+
+    public function fieldClassAcap()
+    {
+        echo '<input type="number" name="class_a_min" id="class_a_min" value="' . get_option('class_a_min') . '">';
     }
 }

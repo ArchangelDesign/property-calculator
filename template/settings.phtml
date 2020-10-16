@@ -1,0 +1,10 @@
+<div class="wrap">
+    <h4>Property Calculator Settings</h4>
+    <form method="post" action="options.php">
+        <?php
+            settings_fields('adpc_settings');
+            do_settings_sections('adpc_settings');
+            submit_button();
+        ?>
+    </form>
+</div>
