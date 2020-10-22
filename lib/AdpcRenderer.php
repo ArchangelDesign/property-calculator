@@ -21,9 +21,8 @@ class AdpcRenderer
             $zip = sanitize_text_field($_POST['zip']);
             $numberOfUnits = sanitize_text_field($_POST['number-of-units']);
             $averageRent = sanitize_text_field($_POST['average-rent']);
-            $expenseRatio = sanitize_text_field($_POST['expense-ratio']);
             $age = sanitize_text_field($_POST['age-of-property']);
-            $response = $this->processForm($zip, $numberOfUnits, $averageRent, $expenseRatio, $age);
+            $response = $this->processForm($zip, $numberOfUnits, $averageRent, $age);
             if ($response instanceof WP_Error) {
                 $errorText = $response->get_error_message();
             } else {
@@ -38,13 +37,13 @@ class AdpcRenderer
         include ADPC_PLUGIN_DIR . '/template/settings.phtml';
     }
 
-    private function processForm($zip, $numberOfUnits, $averageRent, $expenseRatio, $age)
+    private function processForm($zip, $numberOfUnits, $averageRent, $age)
     {
         if ($numberOfUnits < 1) {
             return new WP_Error('invalid-number-of-units', 'Number of units is invalid');
         }
 
-        return $this->calculator->calculateValue($zip, $numberOfUnits, $averageRent, $expenseRatio, $age);
+        return $this->calculator->calculateValue($zip, $numberOfUnits, $averageRent, $age);
     }
 
     public function optionClassAmin()

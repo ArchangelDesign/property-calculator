@@ -78,14 +78,15 @@ class AdpcCalculator
         return number_format(($averageLow + $averageHigh) / 2, 0, '', '');
     }
 
-    private function getElementsByClass(&$parentNode, $tagName, $className) {
-        $nodes=array();
+    private function getElementsByClass(&$parentNode, $tagName, $className)
+    {
+        $nodes = array();
 
         $childNodeList = $parentNode->getElementsByTagName($tagName);
         for ($i = 0; $i < $childNodeList->length; $i++) {
             $temp = $childNodeList->item($i);
             if (stripos($temp->getAttribute('class'), $className) !== false) {
-                $nodes[]=$temp;
+                $nodes[] = $temp;
             }
         }
 
@@ -181,13 +182,15 @@ class AdpcCalculator
         return ($value * $percentage) / 100;
     }
 
-    public function calculateValue($zipCode, $numberOfUnits, $averageRent, $expenseRatio, $ageOfProperty)
+    public function calculateValue($zipCode, $numberOfUnits, $averageRent, $ageOfProperty)
     {
         // 100k => A Class 4%  MAX 20 years
         // 60 - 99k => B Class 4.75%  MAX 45 years  MIN 15 years
         // 40 - 60k => C class 7%  MAX 60 year MIN 43 years
         // < 40k => D class 9.5%   MIN 60 years
 
+        $class = $this->getCapRateClass($zipCode);
+        $expenseRatio = $this->getExpenseRatio($class);
         $capRate = $this->getCapRate($zipCode, $ageOfProperty);
         if ($capRate instanceof WP_Error) {
             return $capRate;
@@ -197,5 +200,20 @@ class AdpcCalculator
         $valueOfProperty = $noi / $capRate;
 
         return $valueOfProperty . ' (' . $capRate . ')';
+    }
+
+    private function getExpenseRatio($class)
+    {
+        switch ($class) {
+            case self::CLASS_A:
+                return 45;
+            case self::CLASS_B:
+                return 50;
+            case self::CLASS_C:
+                return 55;
+            case self::CLASS_D:
+                return 60;
+        }
+        throw new InvalidArgumentException('invalid class provided ' . $class);
     }
 }
