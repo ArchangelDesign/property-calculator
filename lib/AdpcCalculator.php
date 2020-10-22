@@ -142,24 +142,28 @@ class AdpcCalculator
 
         switch ($class) {
             case self::CLASS_A:
+                return get_option(Adpc::OPTION_CLASS_A_CAP_RATE, Adpc::OPTION_DEFAULT_CLASS_A_CAP_RATE);
                 if ($age <= get_option(Adpc::OPTION_CLASS_A_MAX_AGE, Adpc::OPTION_DEFAULT_CLASS_A_MAX_AGE)) {
                     return get_option(Adpc::OPTION_CLASS_A_CAP_RATE, Adpc::OPTION_DEFAULT_CLASS_A_CAP_RATE);
                 } else {
                     return 0.045;
                 }
             case self::CLASS_B:
+                return get_option(Adpc::OPTION_CLASS_B_CAP_RATE, Adpc::OPTION_DEFAULT_CLASS_B_CAP_RATE);
                 if ($age >= $classBminAge && $age <= $classBmaxAge) {
                     return get_option(Adpc::OPTION_CLASS_B_CAP_RATE, Adpc::OPTION_DEFAULT_CLASS_B_CAP_RATE);
                 } else {
                     return 0.05;
                 }
             case self::CLASS_C:
+                return get_option(Adpc::OPTION_CLASS_C_CAP_RATE, Adpc::OPTION_DEFAULT_CLASS_C_CAP_RATE);
                 if ($age >= $classCminAge && $age <= $classCmaxAge) {
                     return get_option(Adpc::OPTION_CLASS_C_CAP_RATE, Adpc::OPTION_DEFAULT_CLASS_C_CAP_RATE);
                 } else {
                     return 0.08;
                 }
             case self::CLASS_D:
+                return get_option(Adpc::OPTION_CLASS_D_CAP_RATE, Adpc::OPTION_DEFAULT_CLASS_D_CAP_RATE);
                 if ($age >= $classDminAge) {
                     return get_option(Adpc::OPTION_CLASS_D_CAP_RATE, Adpc::OPTION_DEFAULT_CLASS_D_CAP_RATE);
                 } else {
