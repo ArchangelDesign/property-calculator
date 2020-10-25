@@ -1,0 +1,26 @@
+{
+  "name": "archangeldev/property-calculator",
+  "type": "project",
+  "description": "Property calculator",
+  "license": "Proprietary",
+  "require": {
+    "sendgrid/sendgrid": "7.8.5",
+    "php": "^7.2",
+    "ext-curl": "*",
+    "ext-json": "*",
+    "ext-pdo": "*"
+  },
+  "config": {
+    "optimize-autoloader": true,
+    "preferred-install": "dist",
+    "sort-packages": true
+  },
+  "autoload": {
+    "psr-4": {
+    },
+    "classmap": [
+    ]
+  },
+  "minimum-stability": "dev",
+  "prefer-stable": true
+}

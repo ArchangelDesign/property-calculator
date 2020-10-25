@@ -7,10 +7,10 @@ Plugin URI: https://archangeldev.com/
 Description: Plugin for calculating property value
 Author: Rafal Martinez-Marjanski
 Author URI: https://github.com/ArchangelDesign
-Version: 1.0.1
+Version: 1.0.4
 */
 
-const ADPC_VERSION = '1.0.0';
+const ADPC_VERSION = '1.0.4';
 const ADPC_REQUIRED_WP_VERSION = '5.3';
 
 define( 'ADPC_PLUGIN', __FILE__ );
@@ -23,6 +23,8 @@ define( 'ADPC_PLUGIN_DIR', untrailingslashit( dirname( ADPC_PLUGIN ) ) );
 
 require_once ADPC_PLUGIN_DIR . '/lib/AdpcRenderer.php';
 require_once ADPC_PLUGIN_DIR . '/lib/Adpc.php';
+require_once ADPC_PLUGIN_DIR . '/vendor/autoload.php';
+
 $renderer = new AdpcRenderer();
 
 add_shortcode('adpc_form', [$renderer, 'displayForm']);
@@ -80,8 +82,44 @@ function adpc_setup_settings() {
     // class D min age
     add_settings_field(Adpc::OPTION_CLASS_D_MIN_AGE, 'Class D min age', [$renderer, 'optionClassDminAge'], Adpc::SETTINGS_PAGE, Adpc::SETTINGS_SECTION_CAP_RATE);
     register_setting(Adpc::SETTINGS_PAGE, Adpc::OPTION_CLASS_D_MIN_AGE);
+    // Send Grig API key
+    add_settings_field(Adpc::OPTION_SENDGRID_KEY, 'SendGrid API Key', [$renderer, 'optionSendgridKey'], Adpc::SETTINGS_PAGE, Adpc::SETTINGS_SECTION_CAP_RATE);
+    register_setting(Adpc::SETTINGS_PAGE, Adpc::OPTION_SENDGRID_KEY);
 
+}
+
+function adpc_activate() {
+    global $wpdb;
+
+    $table_name = $wpdb->prefix . Adpc::TABLE_LEADS;
+
+    $charset_collate = $wpdb->get_charset_collate();
+
+    $sql = "CREATE TABLE $table_name (
+		id mediumint(9) NOT NULL AUTO_INCREMENT,
+		the_name tinytext DEFAULT NULL,
+		email varchar(255) DEFAULT NULL,
+		zip varchar(10) NOT NULL,
+		units varchar (10) NOT NULL,
+		rent varchar (20) NOT NULL,
+		age varchar (10) NOT NULL,
+		property_value varchar (30) NOT NULL,
+ 		PRIMARY KEY  (id)
+	) $charset_collate;";
+
+    require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
+    dbDelta( $sql );
+
+    add_option( 'adpc_version', ADPC_VERSION );
+}
+
+function adpc_update_check() {
+    if (get_option('adpc_version') != ADPC_VERSION) {
+        adpc_activate();
+    }
 }
 
 add_action('admin_menu', 'adpc_add_settings_init');
 add_action('admin_init', 'adpc_setup_settings');
+register_activation_hook(__FILE__, 'adpc_activate');
+add_action( 'plugins_loaded', 'adpc_update_check' );

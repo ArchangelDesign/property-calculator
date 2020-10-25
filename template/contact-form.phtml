@@ -1,0 +1,16 @@
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<form method="post">
+    <?php if (!empty($errorText)) { ?>
+        <div class="php-error">ERROR: <?= $errorText?></div>
+    <?php } ?>
+    <h3>Calculation in progress...</h3>
+    <p>We will email the property value to you once it is calculated.</p>
+    <input type="text" style="display:none" name="_adpc_contact_form" value="1">
+    <input type="number" name="lead-id" value="<?= $leadId ?>">
+    <label for="email">Email address: *</label>
+    <input type="email" name="email" id="email" required>
+    <label for="the-name">Your name:</label>
+    <input type="text" name="the-name" id="the-name">
+    <input type="submit" value="Calculate" style="margin-top: 20px; float: right">
+</form>
+

@@ -1,6 +1,8 @@
 <?php
 
 
+use SendGrid\Mail\Mail;
+
 class Adpc
 {
     const SETTINGS_SECTION_CAP_RATE = 'adpc_cap_rate';
@@ -18,6 +20,8 @@ class Adpc
     const OPTION_CLASS_C_MAX_AGE = 'class_c_max_age';
     const OPTION_CLASS_C_MIN_AGE = 'class_c_min_age';
     const OPTION_CLASS_D_MIN_AGE = 'class_d_min_age';
+    const OPTION_SENDGRID_KEY = 'sendgrid_key';
+    const TABLE_LEADS = 'adpc_leads';
 
     const OPTION_DEFAULT_CLASS_A_MIN = 100000;
     const OPTION_DEFAULT_CLASS_B_MIN = 60000;
@@ -32,4 +36,75 @@ class Adpc
     const OPTION_DEFAULT_CLASS_C_MAX_AGE = 60;
     const OPTION_DEFAULT_CLASS_C_MIN_AGE = 43;
     const OPTION_DEFAULT_CLASS_D_MIN_AGE = 60;
+
+    public static function addLead($zip, $units, $rent, $age, $value)
+    {
+        global $wpdb;
+        $table = $wpdb->prefix . self::TABLE_LEADS;
+        $data = [
+            'zip' => $zip,
+            'units' => $units,
+            'rent' => $rent,
+            'age' => $age,
+            'property_value' => $value
+        ];
+        $format = ['%s', '%s', '%s', '%s', '%s'];
+        $wpdb->insert($table, $data, $format);
+
+        return $wpdb->insert_id;
+    }
+
+    public static function updateLead(string $leadId, string $name, string $email)
+    {
+        global $wpdb;
+        $table = $wpdb->prefix . self::TABLE_LEADS;
+        $data = [
+            'the_name' => $name,
+            'email' => $email
+        ];
+        $where = [
+            'id' => $leadId
+        ];
+        $wpdb->update($table, $data, $where);
+    }
+
+    public static function getLead($id)
+    {
+        global $wpdb;
+        $table = $wpdb->prefix . self::TABLE_LEADS;
+        $records = $wpdb->get_results("select * from $table where id = $id");
+        return reset($records);
+    }
+
+    public static function sendEmail($leadId)
+    {
+        require_once ADPC_PLUGIN_DIR . '/lib/Emailer.php';
+        $lead = self::getLead($leadId);
+        $from = new \SendGrid\Mail\From('info@k-madduxinvestments.com', 'Maddux Investments');
+        $to = new \SendGrid\Mail\To(
+            $lead->email,
+            $lead->the_name,
+            [
+                'name' => $lead->the_name,
+                'address' => $lead->zip,
+                'property_value' => $lead->property_value
+            ]
+        );
+        $email = new Mail(
+            $from,
+            $to
+        );
+        $email->setTemplateId(Emailer::TEMPLATE_ID);
+
+        $sendgrid = new SendGrid(
+            Emailer::API_KEY,
+            [
+                'curl' => [
+                    CURLOPT_SSL_VERIFYHOST => false,
+                    CURLOPT_SSL_VERIFYPEER => false,
+                ]
+            ]
+        );
+        $response = $sendgrid->send($email);
+    }
 }

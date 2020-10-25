@@ -5,6 +5,7 @@ require_once 'AdpcCalculator.php';
 class AdpcRenderer
 {
     const AD_CALC_FORM_ID = '_adpc_value_form';
+    const AD_CONTACT_FORM_ID = '_adpc_contact_form';
 
     /** @var AdpcCalculator */
     private $calculator;
@@ -22,14 +23,28 @@ class AdpcRenderer
             $numberOfUnits = sanitize_text_field($_POST['number-of-units']);
             $averageRent = sanitize_text_field($_POST['average-rent']);
             $age = sanitize_text_field($_POST['age-of-property']);
-            $response = $this->processForm($zip, $numberOfUnits, $averageRent, $age);
-            if ($response instanceof WP_Error) {
-                $errorText = $response->get_error_message();
+            $propertyValue = $this->processForm($zip, $numberOfUnits, $averageRent, $age);
+            if ($propertyValue instanceof WP_Error) {
+                $errorText = $propertyValue->get_error_message();
             } else {
-                return '<h5 style="text-align: center">Estimated Property Value</h5> <h3 style="text-align: center">$' . $response . '</h3>';
+                $leadId = Adpc::addLead($zip, $numberOfUnits, $averageRent, $age, $propertyValue);
+                return $this->displayContactForm($leadId);
             }
         }
-        return include (ADPC_PLUGIN_DIR . '/template/simple-form.phtml');
+        if (isset($_POST[self::AD_CONTACT_FORM_ID])) {
+            $email = sanitize_text_field($_POST['email']);
+            $name = sanitize_text_field($_POST['the-name']);
+            $leadId = sanitize_text_field($_POST['lead-id']);
+            Adpc::updateLead($leadId, $name, $email);
+            Adpc::sendEmail($leadId);
+            return include(ADPC_PLUGIN_DIR . '/template/thankyou.phtml');
+        }
+        return include(ADPC_PLUGIN_DIR . '/template/simple-form.phtml');
+    }
+
+    public function displayContactForm($leadId)
+    {
+        return include(ADPC_PLUGIN_DIR . '/template/contact-form.phtml');
     }
 
     public function displaySettingsPage()
@@ -109,5 +124,10 @@ class AdpcRenderer
     public function optionClassDminAge()
     {
         echo '<input type="number" name="' . Adpc::OPTION_CLASS_D_MIN_AGE . '" id="' . Adpc::OPTION_CLASS_D_MIN_AGE . '" value="' . get_option(Adpc::OPTION_CLASS_D_MIN_AGE, Adpc::OPTION_DEFAULT_CLASS_D_MIN_AGE) . '">';
+    }
+
+    public function optionSendgridKey()
+    {
+        echo '<input type="text" name="' . Adpc::OPTION_SENDGRID_KEY . '" id="' . Adpc::OPTION_SENDGRID_KEY . '" value="' . get_option(Adpc::OPTION_SENDGRID_KEY) . '">';
     }
 }
