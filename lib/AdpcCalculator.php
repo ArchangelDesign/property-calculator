@@ -186,7 +186,7 @@ class AdpcCalculator
         return ($value * $percentage) / 100;
     }
 
-    public function calculateValue($zipCode, $numberOfUnits, $averageRent, $ageOfProperty)
+    public function calculateValue($zipCode, $numberOfUnits, $averageRent, $yearOfProperty)
     {
         // 100k => A Class 4%  MAX 20 years
         // 60 - 99k => B Class 4.75%  MAX 45 years  MIN 15 years
@@ -195,13 +195,14 @@ class AdpcCalculator
 
         $class = $this->getCapRateClass($zipCode);
         $expenseRatio = $this->getExpenseRatio($class);
-        $capRate = $this->getCapRate($zipCode, $ageOfProperty);
+        $age = date('Y') - $yearOfProperty;
+        $capRate = $this->getCapRate($zipCode, $age);
         if ($capRate instanceof WP_Error) {
             return $capRate;
         }
         $grossIncome = $numberOfUnits * $averageRent;
         $noi = $grossIncome - $this->getPercentage($grossIncome, $expenseRatio);
-        $valueOfProperty = $noi / $capRate;
+        $valueOfProperty = number_format($noi / $capRate, 2);
 
         return $valueOfProperty . ' (' . $capRate . ')';
     }
