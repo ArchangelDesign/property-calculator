@@ -204,7 +204,8 @@ class AdpcCalculator
         $noi = $grossIncome - $this->getPercentage($grossIncome, $expenseRatio);
         $valueOfProperty = number_format($noi / $capRate, 2);
 
-        return $valueOfProperty . ' (' . $capRate . ')';
+        return $valueOfProperty;
+//        return $valueOfProperty . ' (' . $capRate . ')';
     }
 
     private function getExpenseRatio($class)
