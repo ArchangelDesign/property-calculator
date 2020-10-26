@@ -202,7 +202,7 @@ class AdpcCalculator
             return $capRate;
         }
         $grossIncome = $numberOfUnits * $averageRent * 12;
-        $noi = $grossIncome - $this->getPercentage($grossIncome, $expenseRatio);
+        $noi = $grossIncome * $expenseRatio;
         $valueOfProperty = number_format($noi / $capRate, 2);
 
         return $valueOfProperty;
@@ -213,13 +213,13 @@ class AdpcCalculator
     {
         switch ($class) {
             case self::CLASS_A:
-                return 45;
+                return 0.45;
             case self::CLASS_B:
-                return 50;
+                return 0.50;
             case self::CLASS_C:
-                return 55;
+                return 0.55;
             case self::CLASS_D:
-                return 60;
+                return 0.60;
         }
         throw new InvalidArgumentException('invalid class provided ' . $class);
     }
