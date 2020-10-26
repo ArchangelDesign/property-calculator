@@ -29,21 +29,22 @@ class AdpcRenderer
             } else {
                 $leadId = Adpc::addLead($zip, $numberOfUnits, $averageRent, $age, $propertyValue);
                 list($state, $city) = $this->calculator->getCityAndStateByZip($zip);
-                return $this->displayContactForm($leadId);
+                return $this->displayContactForm($leadId, $state, $city);
             }
         }
         if (isset($_POST[self::AD_CONTACT_FORM_ID])) {
             $email = sanitize_text_field($_POST['email']);
             $name = sanitize_text_field($_POST['the-name']);
             $leadId = sanitize_text_field($_POST['lead-id']);
-            Adpc::updateLead($leadId, $name, $email);
+            $address = sanitize_text_field($_POST['address']);
+            Adpc::updateLead($leadId, $name, $email, $address);
             Adpc::sendEmail($leadId);
             return include(ADPC_PLUGIN_DIR . '/template/thankyou.phtml');
         }
         return include(ADPC_PLUGIN_DIR . '/template/simple-form.phtml');
     }
 
-    public function displayContactForm($leadId)
+    public function displayContactForm($leadId, $state, $city)
     {
         return include(ADPC_PLUGIN_DIR . '/template/contact-form.phtml');
     }

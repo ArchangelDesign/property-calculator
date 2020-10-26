@@ -54,13 +54,14 @@ class Adpc
         return $wpdb->insert_id;
     }
 
-    public static function updateLead(string $leadId, string $name, string $email)
+    public static function updateLead(string $leadId, string $name, string $email, $addressLine)
     {
         global $wpdb;
         $table = $wpdb->prefix . self::TABLE_LEADS;
         $data = [
             'the_name' => $name,
-            'email' => $email
+            'email' => $email,
+            'address_line' => $addressLine,
         ];
         $where = [
             'id' => $leadId
