@@ -83,17 +83,17 @@ class AdpcRenderer
 
     public function optionClassBcapRate()
     {
-        echo '<input type="number" name="' . Adpc::OPTION_CLASS_B_CAP_RATE . '" id="' . Adpc::OPTION_CLASS_B_CAP_RATE . '" value="' . get_option(Adpc::OPTION_CLASS_B_CAP_RATE, Adpc::OPTION_DEFAULT_CLASS_B_CAP_RATE) . '">';
+        echo '<input type="text" name="' . Adpc::OPTION_CLASS_B_CAP_RATE . '" id="' . Adpc::OPTION_CLASS_B_CAP_RATE . '" value="' . get_option(Adpc::OPTION_CLASS_B_CAP_RATE, Adpc::OPTION_DEFAULT_CLASS_B_CAP_RATE) . '">';
     }
 
     public function optionClassCcapRate()
     {
-        echo '<input type="number" name="' . Adpc::OPTION_CLASS_C_CAP_RATE . '" id="' . Adpc::OPTION_CLASS_C_CAP_RATE . '" value="' . get_option(Adpc::OPTION_CLASS_C_CAP_RATE, Adpc::OPTION_DEFAULT_CLASS_C_CAP_RATE) . '">';
+        echo '<input type="text" name="' . Adpc::OPTION_CLASS_C_CAP_RATE . '" id="' . Adpc::OPTION_CLASS_C_CAP_RATE . '" value="' . get_option(Adpc::OPTION_CLASS_C_CAP_RATE, Adpc::OPTION_DEFAULT_CLASS_C_CAP_RATE) . '">';
     }
 
     public function optionClassDcapRate()
     {
-        echo '<input type="number" name="' . Adpc::OPTION_CLASS_D_CAP_RATE . '" id="' . Adpc::OPTION_CLASS_D_CAP_RATE . '" value="' . get_option(Adpc::OPTION_CLASS_D_CAP_RATE, Adpc::OPTION_DEFAULT_CLASS_D_CAP_RATE) . '">';
+        echo '<input type="text" name="' . Adpc::OPTION_CLASS_D_CAP_RATE . '" id="' . Adpc::OPTION_CLASS_D_CAP_RATE . '" value="' . get_option(Adpc::OPTION_CLASS_D_CAP_RATE, Adpc::OPTION_DEFAULT_CLASS_D_CAP_RATE) . '">';
     }
 
     public function optionClassAmaxAge()
