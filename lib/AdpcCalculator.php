@@ -95,6 +95,25 @@ class AdpcCalculator
 
     public function getMedianHouseholdIncome($zipCode)
     {
+        $lines = $this->getDataLineByZip($zipCode);
+        if ($lines instanceof WP_Error) {
+            return $lines;
+        }
+        return $lines[5];
+    }
+
+    public function getCityAndStateByZip($zipCode)
+    {
+        $lines = $this->getDataLineByZip($zipCode);
+        if ($lines instanceof WP_Error) {
+            return $lines;
+        }
+
+        return [$lines[2], $lines[4]];
+    }
+
+    private function getDataLineByZip($zipCode)
+    {
         $path = ADPC_PLUGIN_DIR . '/data/income-by-zip.csv';
         if (!file_exists($path)) {
             return new WP_Error('no-income-by-zip', 'Income by zip data cannot be loaded. File is missing.');
@@ -108,12 +127,13 @@ class AdpcCalculator
             }
             $columns = str_getcsv($line, ';');
             if ($zipCode == $columns[0]) {
-                return (int)trim(str_replace(['$', ',', '"'], '', $columns[5]));
+                return $columns;
             }
         }
 
         return new WP_Error('panic', 'Unreachable code reached.');
     }
+
 
     private function getCapRateClass($zipCode)
     {

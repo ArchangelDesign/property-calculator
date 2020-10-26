@@ -7,10 +7,10 @@ Plugin URI: https://archangeldev.com/
 Description: Plugin for calculating property value
 Author: Rafal Martinez-Marjanski
 Author URI: https://github.com/ArchangelDesign
-Version: 1.0.5
+Version: 1.0.6
 */
 
-const ADPC_VERSION = '1.0.5';
+const ADPC_VERSION = '1.0.6';
 const ADPC_REQUIRED_WP_VERSION = '5.3';
 
 define( 'ADPC_PLUGIN', __FILE__ );
@@ -104,6 +104,7 @@ function adpc_activate() {
 		rent varchar (20) NOT NULL,
 		age varchar (10) NOT NULL,
 		property_value varchar (30) NOT NULL,
+		address_line varchar (120) DEFAULT NULL,
  		PRIMARY KEY  (id)
 	) $charset_collate;";
 

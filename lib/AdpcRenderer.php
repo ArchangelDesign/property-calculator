@@ -28,6 +28,7 @@ class AdpcRenderer
                 $errorText = $propertyValue->get_error_message();
             } else {
                 $leadId = Adpc::addLead($zip, $numberOfUnits, $averageRent, $age, $propertyValue);
+                list($state, $city) = $this->calculator->getCityAndStateByZip($zip);
                 return $this->displayContactForm($leadId);
             }
         }
