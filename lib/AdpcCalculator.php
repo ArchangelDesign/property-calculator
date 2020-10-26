@@ -108,6 +108,7 @@ class AdpcCalculator
             }
             $columns = explode(';', $line);
             if ($zipCode == $columns[0]) {
+                $columns = str_getcsv($line);
                 return (int)trim(str_replace(['$', ',', '"'], '', $columns[5]));
             }
         }

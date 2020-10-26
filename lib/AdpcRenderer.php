@@ -78,7 +78,7 @@ class AdpcRenderer
 
     public function optionClassAcapRate()
     {
-        echo '<input type="number" name="' . Adpc::OPTION_CLASS_A_CAP_RATE . '" id="' . Adpc::OPTION_CLASS_A_CAP_RATE . '" value="' . get_option(Adpc::OPTION_CLASS_A_CAP_RATE, Adpc::OPTION_DEFAULT_CLASS_A_CAP_RATE) . '">';
+        echo '<input type="text" name="' . Adpc::OPTION_CLASS_A_CAP_RATE . '" id="' . Adpc::OPTION_CLASS_A_CAP_RATE . '" value="' . get_option(Adpc::OPTION_CLASS_A_CAP_RATE, Adpc::OPTION_DEFAULT_CLASS_A_CAP_RATE) . '">';
     }
 
     public function optionClassBcapRate()
