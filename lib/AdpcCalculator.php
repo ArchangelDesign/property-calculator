@@ -106,9 +106,8 @@ class AdpcCalculator
             if ($line === false) {
                 return new WP_Error('zip-not-found', 'Cannot locate zip code ' . $zipCode);
             }
-            $columns = explode(';', $line);
+            $columns = str_getcsv($line, ';');
             if ($zipCode == $columns[0]) {
-                $columns = str_getcsv($line);
                 return (int)trim(str_replace(['$', ',', '"'], '', $columns[5]));
             }
         }
