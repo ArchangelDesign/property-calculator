@@ -39,14 +39,20 @@ class AdpcRenderer
             $address = sanitize_text_field($_POST['address']);
             Adpc::updateLead($leadId, $name, $email, $address);
             Adpc::sendEmail($leadId);
-            return include(ADPC_PLUGIN_DIR . '/template/thankyou.phtml');
+            ob_start();
+            include(ADPC_PLUGIN_DIR . '/template/thankyou.phtml');
+            return ob_get_clean();
         }
-        return include(ADPC_PLUGIN_DIR . '/template/simple-form.phtml');
+        ob_start();
+        include(ADPC_PLUGIN_DIR . '/template/simple-form.phtml');
+        return ob_get_clean();
     }
 
     public function displayContactForm($leadId, $state, $city)
     {
-        return include(ADPC_PLUGIN_DIR . '/template/contact-form.phtml');
+        ob_start();
+        include(ADPC_PLUGIN_DIR . '/template/contact-form.phtml');
+        return ob_get_clean();
     }
 
     public function displaySettingsPage()
