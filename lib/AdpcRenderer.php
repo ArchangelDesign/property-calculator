@@ -18,6 +18,7 @@ class AdpcRenderer
     public function displayForm()
     {
         $errorText = '';
+        $apiKey = get_option("gfac_api_key");
         if (isset($_POST[self::AD_CALC_FORM_ID])) {
             $zip = sanitize_text_field($_POST['zip']);
             $numberOfUnits = sanitize_text_field($_POST['number-of-units']);
@@ -29,7 +30,7 @@ class AdpcRenderer
             } else {
                 $leadId = Adpc::addLead($zip, $numberOfUnits, $averageRent, $age, $propertyValue);
                 list($state, $city) = $this->calculator->getCityAndStateByZip($zip);
-                return $this->displayContactForm($leadId, $state, $city);
+                return $this->displayContactForm($leadId, $zip, $apiKey);
             }
         }
         if (isset($_POST[self::AD_CONTACT_FORM_ID])) {
@@ -48,7 +49,7 @@ class AdpcRenderer
         return ob_get_clean();
     }
 
-    public function displayContactForm($leadId, $state, $city)
+    public function displayContactForm($leadId, $zip, $apiKey)
     {
         ob_start();
         include(ADPC_PLUGIN_DIR . '/template/contact-form.phtml');
