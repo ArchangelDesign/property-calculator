@@ -7,10 +7,10 @@ Plugin URI: https://archangeldev.com/
 Description: Plugin for calculating property value
 Author: Rafal Martinez-Marjanski
 Author URI: https://github.com/ArchangelDesign
-Version: 1.0.11
+Version: 1.0.12
 */
 
-const ADPC_VERSION = '1.0.11';
+const ADPC_VERSION = '1.0.12';
 const ADPC_REQUIRED_WP_VERSION = '5.3';
 
 define( 'ADPC_PLUGIN', __FILE__ );

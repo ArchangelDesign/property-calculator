@@ -40,6 +40,7 @@ class AdpcRenderer
             $address = sanitize_text_field($_POST['address']);
             Adpc::updateLead($leadId, $name, $email, $address);
             Adpc::sendEmail($leadId);
+            Adpc::sendLeadInfoToAdmin($leadId);
             ob_start();
             include(ADPC_PLUGIN_DIR . '/template/thankyou.phtml');
             return ob_get_clean();

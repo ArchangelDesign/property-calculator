@@ -108,4 +108,23 @@ class Adpc
         );
         $response = $sendgrid->send($email);
     }
+
+    public static function sendLeadInfoToAdmin($leadId)
+    {
+        $lead = self::getLead($leadId);
+        $from = new \SendGrid\Mail\From('info@k-madduxinvestments.com', 'Maddux Investments');
+        $to = new \SendGrid\Mail\To('info@k-madduxinvestments.com');
+        $email = new Mail($from, $to);
+        $email->addContent('text/html', json_encode($lead));
+        $sendgrid = new SendGrid(
+            Emailer::API_KEY,
+            [
+                'curl' => [
+                    CURLOPT_SSL_VERIFYHOST => false,
+                    CURLOPT_SSL_VERIFYPEER => false,
+                ]
+            ]
+        );
+        $response = $sendgrid->send($email);
+    }
 }
