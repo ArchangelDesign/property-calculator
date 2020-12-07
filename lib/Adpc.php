@@ -112,10 +112,19 @@ class Adpc
     public static function sendLeadInfoToAdmin($leadId)
     {
         $lead = self::getLead($leadId);
+        $lead->Browser = $_SERVER['HTTP_USER_AGENT'];
+        $lead->IP = $_SERVER['REMOTE_ADDR'];
+        $lead->Timestamp = date('Y-m-d H:i:s', $_SERVER['REQUEST_TIME']);
         $from = new \SendGrid\Mail\From('info@k-madduxinvestments.com', 'Maddux Investments');
         $to = new \SendGrid\Mail\To('info@k-madduxinvestments.com', 'Admin');
         $email = new Mail($from, $to);
-        $email->addContent('text/html', json_encode($lead));
+        $content = '<h4>New lead:</h4>';
+        $content .= '<ul>';
+        foreach ($lead as $name => $value) {
+            $content .= "<li>$name: $value</li>";
+        }
+        $content .= '</ul>';
+        $email->addContent('text/html', $content);
         $email->setSubject('New lead from Property Calculator version ' . ADPC_VERSION);
         $sendgrid = new SendGrid(
             Emailer::API_KEY,
@@ -127,6 +136,5 @@ class Adpc
             ]
         );
         $response = $sendgrid->send($email);
-        var_dump($response);
     }
 }
