@@ -113,9 +113,10 @@ class Adpc
     {
         $lead = self::getLead($leadId);
         $from = new \SendGrid\Mail\From('info@k-madduxinvestments.com', 'Maddux Investments');
-        $to = new \SendGrid\Mail\To('info@k-madduxinvestments.com');
+        $to = new \SendGrid\Mail\To('info@k-madduxinvestments.com', 'Admin');
         $email = new Mail($from, $to);
         $email->addContent('text/html', json_encode($lead));
+        $email->setSubject('New lead from Property Calculator version ' . ADPC_VERSION);
         $sendgrid = new SendGrid(
             Emailer::API_KEY,
             [
@@ -126,5 +127,6 @@ class Adpc
             ]
         );
         $response = $sendgrid->send($email);
+        var_dump($response);
     }
 }
