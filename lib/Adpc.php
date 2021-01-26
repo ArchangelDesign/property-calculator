@@ -124,7 +124,8 @@ class Adpc
             $content .= "<li>$name: $value</li>";
         }
         $content .= '</ul>';
-        $email->addContent('text/html', $content);
+//        $email->addContent('text/html', $content);
+        $email->addContent('application/json', json_encode($lead));
         $email->setSubject('New lead from Property Calculator version ' . ADPC_VERSION);
         $sendgrid = new SendGrid(
             Emailer::API_KEY,
